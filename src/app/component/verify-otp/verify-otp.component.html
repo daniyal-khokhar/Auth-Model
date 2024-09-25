@@ -1,0 +1,27 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8 col-sm-12">
+        <h1 class="text-center">Enter OTP</h1>
+        <form [formGroup]="otpForm" (ngSubmit)="onSubmit()" autocomplete="off">
+          <div class="form-group">
+            <label for="otp"><b>OTP:</b></label>
+            <div class="d-flex justify-content-between">
+              <input type="text" id="otp1" class="form-control otp-input text-center" formControlName="digit1"
+                maxlength="1" (input)="moveToNext(2)">
+              <input type="text" id="otp2" class="form-control otp-input text-center" formControlName="digit2"
+                maxlength="1" (input)="moveToNext(3)">
+              <input type="text" id="otp3" class="form-control otp-input text-center" formControlName="digit3"
+                maxlength="1" (input)="moveToNext(4)">
+              <input type="text" id="otp4" class="form-control otp-input text-center" formControlName="digit4"
+                maxlength="1" (input)="onSubmit()">
+            </div>
+            <div *ngIf="getOtp()?.invalid && getOtp()?.touched" class="ErrorMessage">
+              {{ otpError() }}
+            </div>
+          </div>
+  
+          <button type="submit" class="btn btn-primary mt-3">Send OTP</button>
+        </form>
+      </div>
+    </div>
+  </div>
