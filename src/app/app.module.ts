@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SignupComponent } from './component/signup/signup.component';
 import { LoginComponent } from './component/login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { AccountOtpComponent } from './component/account-otp/account-otp.component';
@@ -13,6 +13,8 @@ import { HomeComponent } from './component/home/home.component';
 import { ForgotPasswordComponent } from './component/forgot-password/forgot-password.component';
 import { VerifyOtpComponent } from './component/verify-otp/verify-otp.component';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
+import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -23,15 +25,17 @@ import { ChangePasswordComponent } from './component/change-password/change-pass
     HomeComponent,
     ForgotPasswordComponent,
     VerifyOtpComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     CommonModule,
-    HttpClientModule
-
+    HttpClientModule,
+    FormsModule,
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

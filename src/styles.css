@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+@import '../node_modules/ngx-toastr/toastr.css';
+
+.ErrorMessage {
+  color: red;
+}
+
+.toast-container .ngx-toastr {
+  box-shadow: 0 0 12px #99999969;
+}
+
+.error {
+  background-color: #fb0707;
+}
+
+.success {
+  background-color: green;
+}

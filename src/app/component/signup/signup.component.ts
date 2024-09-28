@@ -1,13 +1,10 @@
-import { Component } from '@angular/core';
+import { Component , Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from 'src/app/services/user-services';
 import { RolesService } from 'src/app/services/role-service';
-import { HttpConfig } from 'src/app/services/http-config';
-import { WrapHttpService } from 'src/app/services/wrap-http.service';
-
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-signup',
@@ -15,10 +12,11 @@ import { WrapHttpService } from 'src/app/services/wrap-http.service';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
+  isLoading = false;
   signUpForm!: FormGroup;
   email!: string;
   
-  constructor(private fb: FormBuilder ,
+  constructor(private fb: FormBuilder , @Inject(ToastrService) private toastr: ToastrService ,
     private router: Router, private route: ActivatedRoute ,
     private userService: UserService , private roleService: RolesService
   ) {}
@@ -47,35 +45,57 @@ export class SignupComponent {
   onSubmit() {
     if (!this.signUpForm.valid) {
       this.signUpForm.markAllAsTouched();
+      this.toastr.error('Please fill in all required fields.', 'Validation Error', {
+        positionClass: 'toast-top-right',
+      });
       return;
     }
+  
+    // Prepare the user object for submission
     const user = {
-      ...this.signUpForm.value, 
-       role: "client"
+      ...this.signUpForm.value,
+      role: "client"
     };
-
+  
     const email = user.email;
     console.log(email);
-
+  
+    // Start loading
+    this.isLoading = true;
+  
+    // Make the signup request
     this.userService.signUp(user).subscribe(
       (response) => {
         console.log(response);
-        if (response.statusCode === 500) {
-          alert("error")
+  
+        // Check for a specific status code, like 500, to handle errors
+        if (response?.error === "Internal server error") {
+          this.toastr.error('An error occurred during sign-up. Please try again.', 'Error', {
+            positionClass: 'toast-top-right',
+          });
+          this.isLoading = false;  // Stop loading on error
+          return;
         }
+  
+        // Success: Navigate to the OTP page and show a success message
         this.router.navigate(['/accountotp'], { queryParams: { email } });
-      //   this.toastr.info('Please Check Email for Otp.', 'Success',{
-      //     positionClass: 'toast-top-right',
-      //  });
-        console.log('signUp successful:', response);
+        this.isLoading = false;  // Stop loading on success
+        this.toastr.info('Please check your email for the OTP.', 'Success', {
+          positionClass: 'toast-top-right',
+        });
+  
+        console.log('Sign-up successful:', response);
       },
       (error) => {
-        console.error('Signup error:', error);
-      })
-  }
 
-  tologinpage(){
-    this.router.navigate(['p-login']);
+        console.error('Sign-up error:', error);
+        this.toastr.error('Signup failed. Please try again.', 'Error', {
+          positionClass: 'toast-top-right',
+        });
+        this.isLoading = false;  // Stop loading on error
+      }
+    );
   }
+  
 }
 

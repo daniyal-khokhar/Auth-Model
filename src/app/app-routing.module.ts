@@ -7,15 +7,18 @@ import { HomeComponent } from './component/home/home.component';
 import { ForgotPasswordComponent } from './component/forgot-password/forgot-password.component';
 import { VerifyOtpComponent } from './component/verify-otp/verify-otp.component';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
+import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
 
 const routes: Routes = [
-  { path:"signup" , component:SignupComponent },
   { path:"home" , component: HomeComponent },
+  { path:"" , component: HomeComponent },
+  { path:"signup" , component:SignupComponent },
   { path:"login" , component:LoginComponent },
   { path:"accountotp" , component: AccountOtpComponent },
   { path:"verifyotp" , component: VerifyOtpComponent },
   { path:"forgot" , component: ForgotPasswordComponent },
   { path:"change" , component: ChangePasswordComponent },
+  { path:"reset" , component: ResetPasswordComponent },
 ];
 
 @NgModule({

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { UserService } from 'src/app/services/user-services';
 
 @Component({
@@ -16,7 +17,7 @@ export class AccountOtpComponent {
   email!: string;
   isLogin: boolean = false;
   
-  constructor(private formBuilder: FormBuilder 
+  constructor(private formBuilder: FormBuilder , @Inject(ToastrService) private toastr: ToastrService 
     ,private userService: UserService,
      private router: Router, private route :ActivatedRoute
   ) { 
@@ -56,13 +57,13 @@ onSubmit() {
       this.userService.accouuntVerify(verification)
       .then(response => {
         if (response.message === "Invalid or expired OTP.") {
-          // this.toastr.error('Invalid or expired OTP.', 'Error', {
-          //   positionClass: 'toast-top-right',
-          // });
+          this.toastr.error('Invalid or expired OTP.', 'Error', {
+            positionClass: 'toast-top-right',
+          });
         } else {
-          // this.toastr.success('User Saved Successfully.', 'Success', {
-          //   positionClass: 'toast-top-right',
-          // });
+          this.toastr.success('Account Verified Successfully.', 'Success', {
+            positionClass: 'toast-top-right',
+          });
           this.router.navigate(['/login']);
         }
       })

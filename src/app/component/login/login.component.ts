@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule , FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/services/user-services';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -10,10 +10,12 @@ import { UserService } from 'src/app/services/user-services';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  public loginForm!: FormGroup;
+    isLoading = false;
+    public loginForm!: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
      private userService: UserService, 
+     @Inject(ToastrService) private toastr: ToastrService,
       private router: Router) { }
 
   ngOnInit(): void {
@@ -38,16 +40,28 @@ export class LoginComponent {
       const password = this.loginForm.get('password')?.value;
 
       const data = { email, password };
-
+      this.isLoading = true;
       this.userService.logIn(data).then(
-          response => {
-              console.log(response, "dataaaaaaaaa");
-            //   this.toastr.success('User Login Successfull.', 'Success',{
-            //     positionClass: 'toast-top-right',
-            //  });
-              this.router.navigate(['/home']);
-          },
-      );
+        response => {
+           if (response.message === "Unauthorized" && response.statusCode === 401 ) {
+            this.toastr.error('Login failed. Please try again.', 'Error', {
+              positionClass: 'toast-top-right',
+            });
+          } else {
+            this.toastr.success('User Login Successful.', 'Success', {
+              positionClass: 'toast-top-right',
+            });
+            this.router.navigate(['/home']);
+          }
+          this.isLoading = false;
+        },
+      ).catch(error => {
+        console.error('An error occurred:', error);
+        this.toastr.error('Login failed. Please try again..', 'Error', {
+          positionClass: 'toast-top-right',
+        });
+      });
+      
   }
 
 

@@ -30,7 +30,6 @@ export class UserService {
       UserService.setLoggedUser(response);
       console.log(response, " responce=====>");
       return response;
-
     }).catch(error => {
       console.error('Login error:', error);
       throw error;
@@ -113,6 +112,10 @@ export class UserService {
 
   resetPassword(data: object) {
     return lastValueFrom(this.http.post(`${this.baseUrl}/reset-password`, data));
+  }
+
+  changePassword(data: { email: string, currentPassword: string, newPassword: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/change-password`, data);
   }
 
   forgotPassword(data: any): Promise<any> {
